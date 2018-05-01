@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 import { StackNavigator } from 'react-navigation'
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native'
 
 export default class App extends React.Component {
   render() {
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})
