@@ -25,8 +25,12 @@
   },
   "dependencies": {
     "expo": "^27.0.1",
+    "prop-types": "^15.6.1",
     "react": "16.3.1",
     "react-native": "~0.55.2",
-    "react-navigation": "^1.5.11"
+    "react-navigation": "^1.5.11",
+    "react-navigation-header-buttons": "0.0.7",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0"
   }
 }
