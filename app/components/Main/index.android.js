@@ -1,5 +1,15 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, Alert } from 'react-native'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+} from 'react-native'
+
+// eslint-disable-next-line
+import { actionNewTimeSpanReceived } from 'time-machine/app/actionCreators'
 
 const styles = StyleSheet.create({
   container: {
@@ -8,6 +18,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+})
+
+const mapDispatchToProps = () => ({
+  saveTimeSpan: actionNewTimeSpanReceived,
 })
 
 class Main extends React.Component {
@@ -35,6 +49,25 @@ class Main extends React.Component {
     this.stopTimer = this.stopTimer.bind(this)
   }
 
+  getFormattedDateRange() {
+    const { timerStartedAt, timerEndedAt } = this.state
+
+    const withLeadingZero = value => (
+      value < 10 ? `0${value}` : value
+    )
+
+    const startMinutes = withLeadingZero(timerStartedAt.getMinutes())
+    const startSeconds = withLeadingZero(timerStartedAt.getSeconds())
+
+    const endMinutes = withLeadingZero(timerEndedAt.getMinutes())
+    const endSeconds = withLeadingZero(timerEndedAt.getSeconds())
+
+    const start = `${timerStartedAt.getHours()}:${startMinutes}:${startSeconds}`
+    const end = `${timerEndedAt.getHours()}:${endMinutes}:${endSeconds}`
+
+    return `${start} - ${end}`
+  }
+
   startTimer() {
     const intervalId = setInterval(
       () => this.setState({ timerEndedAt: new Date() }),
@@ -49,7 +82,15 @@ class Main extends React.Component {
   }
 
   stopTimer() {
-    clearInterval(this.state.intervalId)
+    const {
+      intervalId,
+      timerStartedAt,
+      timerEndedAt,
+    } = this.state
+    const { saveTimeSpan } = this.props
+
+    clearInterval(intervalId)
+    saveTimeSpan(timerStartedAt, timerEndedAt)
     this.setState({
       isTimerRunning: false,
       intervalId: 0,
@@ -68,7 +109,6 @@ class Main extends React.Component {
     const {
       isTimerRunning,
       timerStartedAt,
-      timerEndedAt,
     } = this.state
 
     return (
@@ -79,11 +119,17 @@ class Main extends React.Component {
           color="black"
         />
         {timerStartedAt.getSeconds && (
-          <Text>{`${timerStartedAt.getSeconds()} - ${timerEndedAt.getSeconds()}`}</Text>
+          <Text>{this.getFormattedDateRange()}</Text>
         )}
       </View>
     )
   }
 }
 
-export default Main
+const { func } = PropTypes
+
+Main.propTypes = {
+  saveTimeSpan: func.isRequired,
+}
+
+export default connect(null, mapDispatchToProps)(Main)
