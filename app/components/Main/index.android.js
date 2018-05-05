@@ -6,10 +6,14 @@ import {
   Text,
   View,
   Button,
+  TimePickerAndroid,
+  TouchableOpacity,
 } from 'react-native'
 
 // eslint-disable-next-line
 import { actionNewTimeSpanReceived } from 'time-machine/app/actionCreators'
+
+import { getFormattedDate } from './utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -27,9 +31,9 @@ const mapDispatchToProps = () => ({
 class Main extends React.Component {
   static navigationOptions({ navigation }) {
     return {
-      headerTitle: () => <Text>itsa title!</Text>,
+      headerTitle: () => <Text>[] title</Text>,
       headerRight: (
-        <Button onPress={() => navigation.navigate('STATS')} title="Go to Stats" color="black" />
+        <Button onPress={() => navigation.navigate('STATS')} title="stats" color="black" />
       ),
     }
   }
@@ -39,33 +43,23 @@ class Main extends React.Component {
 
     this.state = {
       isTimerRunning: false,
-      timerStartedAt: {},
-      timerEndedAt: {},
+      timerStartedAt: undefined,
+      timerEndedAt: undefined,
       intervalId: 0,
     }
 
     this.toggleTimer = this.toggleTimer.bind(this)
     this.startTimer = this.startTimer.bind(this)
     this.stopTimer = this.stopTimer.bind(this)
+    this.setTimeSpanFromTimePicker = this.setTimeSpanFromTimePicker.bind(this)
   }
 
-  getFormattedDateRange() {
-    const { timerStartedAt, timerEndedAt } = this.state
-
-    const withLeadingZero = value => (
-      value < 10 ? `0${value}` : value
-    )
-
-    const startMinutes = withLeadingZero(timerStartedAt.getMinutes())
-    const startSeconds = withLeadingZero(timerStartedAt.getSeconds())
-
-    const endMinutes = withLeadingZero(timerEndedAt.getMinutes())
-    const endSeconds = withLeadingZero(timerEndedAt.getSeconds())
-
-    const start = `${timerStartedAt.getHours()}:${startMinutes}:${startSeconds}`
-    const end = `${timerEndedAt.getHours()}:${endMinutes}:${endSeconds}`
-
-    return `${start} - ${end}`
+  setTimeSpanFromTimePicker(key) {
+    return () => {
+      this.setState({
+        [key]: new Date(),
+      })
+    }
   }
 
   startTimer() {
@@ -109,17 +103,31 @@ class Main extends React.Component {
     const {
       isTimerRunning,
       timerStartedAt,
+      timerEndedAt,
     } = this.state
 
     return (
       <View style={styles.container}>
         <Button
           onPress={this.toggleTimer}
-          title={isTimerRunning ? 'stop' : 'start'}
+          title={isTimerRunning ? 'stop' : 'run'}
           color="black"
+          style={styles.container}
         />
-        {timerStartedAt.getSeconds && (
-          <Text>{this.getFormattedDateRange()}</Text>
+        {timerStartedAt && timerEndedAt && (
+          <View>
+            <TouchableOpacity
+              onPress={this.setTimeSpanFromTimePicker('timerStartedAt')}
+            >
+              <Text>{getFormattedDate(timerStartedAt)}</Text>
+            </TouchableOpacity>
+            <Text> - </Text>
+            <TouchableOpacity
+              onPress={this.setTimeSpanFromTimePicker('timerEndedAt')}
+            >
+              <Text>{getFormattedDate(timerEndedAt)}</Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     )
