@@ -2,11 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
-  StyleSheet,
   Text,
   View,
   Button,
-  TimePickerAndroid,
   TouchableOpacity,
 } from 'react-native'
 
@@ -14,15 +12,7 @@ import {
 import { actionNewTimeSpanReceived } from 'time-machine/app/actionCreators'
 
 import { getFormattedDate } from './utils'
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+import { styles } from './styles'
 
 const mapDispatchToProps = () => ({
   saveTimeSpan: actionNewTimeSpanReceived,
@@ -112,23 +102,26 @@ class Main extends React.Component {
           onPress={this.toggleTimer}
           title={isTimerRunning ? 'stop' : 'run'}
           color="black"
-          style={styles.container}
         />
-        {timerStartedAt && timerEndedAt && (
-          <View>
-            <TouchableOpacity
-              onPress={this.setTimeSpanFromTimePicker('timerStartedAt')}
-            >
-              <Text>{getFormattedDate(timerStartedAt)}</Text>
-            </TouchableOpacity>
-            <Text> - </Text>
-            <TouchableOpacity
-              onPress={this.setTimeSpanFromTimePicker('timerEndedAt')}
-            >
-              <Text>{getFormattedDate(timerEndedAt)}</Text>
-            </TouchableOpacity>
+        <View style={styles.timeSpanContainer}>
+          <TouchableOpacity
+            onPress={this.setTimeSpanFromTimePicker('timerStartedAt')}
+          >
+            <View style={styles.dateContainer}>
+              <Text style={styles.date}>{timerStartedAt ? getFormattedDate(timerStartedAt) : '00:00:00'}</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.separatorContainer}>
+            <Text style={styles.separator}> ― </Text>
           </View>
-        )}
+          <TouchableOpacity
+            onPress={this.setTimeSpanFromTimePicker('timerEndedAt')}
+          >
+            <View style={styles.dateContainer}>
+              <Text style={styles.date}>{timerEndedAt ? getFormattedDate(timerEndedAt) : '00:00:00'}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
