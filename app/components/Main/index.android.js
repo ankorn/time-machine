@@ -5,13 +5,15 @@ import {
   Text,
   View,
   Button,
-  TouchableOpacity,
+  Alert,
+  ScrollView,
 } from 'react-native'
 
 // eslint-disable-next-line
 import { actionNewTimeSpanReceived } from 'time-machine/app/actionCreators'
+// eslint-disable-next-line
+import TimeSpan from 'time-machine/app/components/TimeSpan'
 
-import { getFormattedDate } from './utils'
 import { styles } from './styles'
 
 const mapDispatchToProps = () => ({
@@ -95,6 +97,11 @@ class Main extends React.Component {
       timerStartedAt,
       timerEndedAt,
     } = this.state
+    // Alert.alert(timerStartedAt && timerStartedAt.getTime().toString())
+    const runningTimeSpan = {
+      startedAt: timerStartedAt && timerStartedAt.getTime(),
+      endedAt: timerEndedAt && timerEndedAt.getTime(),
+    }
 
     return (
       <View style={styles.container}>
@@ -103,24 +110,46 @@ class Main extends React.Component {
           title={isTimerRunning ? 'stop' : 'run'}
           color="black"
         />
-        <View style={styles.timeSpanContainer}>
-          <TouchableOpacity
-            onPress={this.setTimeSpanFromTimePicker('timerStartedAt')}
+        <View style={styles.scrollViewContainer}>
+          <ScrollView
+            contentContainerStyle={styles.scrollView}
           >
-            <View style={styles.dateContainer}>
-              <Text style={styles.date}>{timerStartedAt ? getFormattedDate(timerStartedAt) : '00:00:00'}</Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.separatorContainer}>
-            <Text style={styles.separator}> ― </Text>
-          </View>
-          <TouchableOpacity
-            onPress={this.setTimeSpanFromTimePicker('timerEndedAt')}
-          >
-            <View style={styles.dateContainer}>
-              <Text style={styles.date}>{timerEndedAt ? getFormattedDate(timerEndedAt) : '00:00:00'}</Text>
-            </View>
-          </TouchableOpacity>
+            <TimeSpan
+              timeSpan={runningTimeSpan}
+              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
+              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
+            />
+            <TimeSpan
+              timeSpan={runningTimeSpan}
+              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
+              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
+            />
+            <TimeSpan
+              timeSpan={runningTimeSpan}
+              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
+              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
+            />
+            <TimeSpan
+              timeSpan={runningTimeSpan}
+              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
+              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
+            />
+            <TimeSpan
+              timeSpan={runningTimeSpan}
+              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
+              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
+            />
+            <TimeSpan
+              timeSpan={runningTimeSpan}
+              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
+              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
+            />
+            <TimeSpan
+              timeSpan={runningTimeSpan}
+              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
+              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
+            />
+          </ScrollView>
         </View>
       </View>
     )

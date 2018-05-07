@@ -8,35 +8,14 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
-  timeSpanContainer: {
-    flex: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: PixelRatio.getPixelSizeForLayoutSize(5),
+  scrollViewContainer: {
+    height: PixelRatio.getPixelSizeForLayoutSize(100),
+    marginTop: PixelRatio.getPixelSizeForLayoutSize(10),
   },
-  dateContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: PixelRatio.getPixelSizeForLayoutSize(40),
-    height: PixelRatio.getPixelSizeForLayoutSize(15),
-    backgroundColor: 'black',
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: 'white',
-  },
-  separatorContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: PixelRatio.getPixelSizeForLayoutSize(15),
-    height: PixelRatio.getPixelSizeForLayoutSize(15),
-  },
-  separator: {
-    fontSize: PixelRatio.getPixelSizeForLayoutSize(10),
-  },
-  date: {
-    color: 'white',
+  scrollView: {
+    flexGrow: 1,
+    justifyContent: 'space-between',
   },
 })
