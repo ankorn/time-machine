@@ -7,6 +7,9 @@ import {
   Button,
   Alert,
   ScrollView,
+  TouchableOpacity,
+  FlatList,
+  TextInput,
 } from 'react-native'
 
 // eslint-disable-next-line
@@ -38,12 +41,15 @@ class Main extends React.Component {
       timerStartedAt: undefined,
       timerEndedAt: undefined,
       intervalId: 0,
+      selectedLabel: '',
+      createdLabel: '',
     }
 
     this.toggleTimer = this.toggleTimer.bind(this)
     this.startTimer = this.startTimer.bind(this)
     this.stopTimer = this.stopTimer.bind(this)
     this.setTimeSpanFromTimePicker = this.setTimeSpanFromTimePicker.bind(this)
+    this.renderLabelItem = this.renderLabelItem.bind(this)
   }
 
   setTimeSpanFromTimePicker(key) {
@@ -91,25 +97,50 @@ class Main extends React.Component {
     }
   }
 
+  renderLabelItem({ label }) {
+    if (label === 'NEW') {
+      return (
+        <TextInput
+          placeholder="new label..."
+          value={this.state.createdLabel}
+          onChange={createdLabel => this.setState({ createdLabel })}
+        />
+      )
+    }
+
+    return (
+      <Text>${label}</Text>
+    )
+  }
+
   render() {
     const {
       isTimerRunning,
       timerStartedAt,
       timerEndedAt,
     } = this.state
-    // Alert.alert(timerStartedAt && timerStartedAt.getTime().toString())
+
     const runningTimeSpan = {
       startedAt: timerStartedAt && timerStartedAt.getTime(),
       endedAt: timerEndedAt && timerEndedAt.getTime(),
     }
 
+    const labels = [
+      'NEW',
+      'statistics',
+      'probability theory',
+      'linear algebra',
+    ]
+
     return (
       <View style={styles.container}>
-        <Button
+        <TouchableOpacity
           onPress={this.toggleTimer}
-          title={isTimerRunning ? 'stop' : 'run'}
-          color="black"
-        />
+        >
+          <View style={styles.timerButtonContainer}>
+            <Text style={styles.timerButtonText}>{isTimerRunning ? 'STOP' : 'RUN'}</Text>
+          </View>
+        </TouchableOpacity>
         <View style={styles.scrollViewContainer}>
           <ScrollView
             contentContainerStyle={styles.scrollView}
