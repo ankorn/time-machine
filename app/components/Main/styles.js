@@ -25,13 +25,27 @@ export const styles = StyleSheet.create({
     flex: 0,
     width: PixelRatio.getPixelSizeForLayoutSize(40),
     height: PixelRatio.getPixelSizeForLayoutSize(40),
-    borderRadius: PixelRatio.getPixelSizeForLayoutSize(5),
-    borderColor: 'black',
-    borderWidth: 3,
   },
   timerButtonText: {
     fontSize: PixelRatio.getPixelSizeForLayoutSize(10),
     fontWeight: '700',
     fontFamily: 'Roboto',
+  },
+  statsButtonContainer: {
+    paddingRight: PixelRatio.getPixelSizeForLayoutSize(7),
+  },
+  labelContainer: {
+    width: PixelRatio.getPixelSizeForLayoutSize(70),
+    height: PixelRatio.getPixelSizeForLayoutSize(15),
+  },
+  textInput: {
+    height: PixelRatio.getPixelSizeForLayoutSize(15),
+  },
+  labelsTitleContainer: {
+    marginBottom: PixelRatio.getPixelSizeForLayoutSize(7),
+  },
+  labelsTitle: {
+    fontSize: PixelRatio.getPixelSizeForLayoutSize(8),
+    fontWeight: '500',
   },
 })

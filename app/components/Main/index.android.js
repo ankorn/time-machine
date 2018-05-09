@@ -26,9 +26,14 @@ const mapDispatchToProps = () => ({
 class Main extends React.Component {
   static navigationOptions({ navigation }) {
     return {
-      headerTitle: () => <Text>[] title</Text>,
       headerRight: (
-        <Button onPress={() => navigation.navigate('STATS')} title="stats" color="black" />
+        <View style={styles.statsButtonContainer}>
+          <Button
+            onPress={() => navigation.navigate('STATS')}
+            title="STATS"
+            color="black"
+          />
+        </View>
       ),
     }
   }
@@ -41,7 +46,6 @@ class Main extends React.Component {
       timerStartedAt: undefined,
       timerEndedAt: undefined,
       intervalId: 0,
-      selectedLabel: '',
       createdLabel: '',
     }
 
@@ -49,7 +53,7 @@ class Main extends React.Component {
     this.startTimer = this.startTimer.bind(this)
     this.stopTimer = this.stopTimer.bind(this)
     this.setTimeSpanFromTimePicker = this.setTimeSpanFromTimePicker.bind(this)
-    this.renderLabelItem = this.renderLabelItem.bind(this)
+    this.renderLabel = this.renderLabel.bind(this)
   }
 
   setTimeSpanFromTimePicker(key) {
@@ -97,19 +101,33 @@ class Main extends React.Component {
     }
   }
 
-  renderLabelItem({ label }) {
+  renderLabel(label) {
+    if (!label || label.length === 0) return null
+
     if (label === 'NEW') {
       return (
         <TextInput
-          placeholder="new label..."
+          style={styles.textInput}
+          placeholder="new label"
           value={this.state.createdLabel}
-          onChange={createdLabel => this.setState({ createdLabel })}
+          onChangeText={createdLabel => this.setState({ createdLabel })}
+          onSubmitEditing={this.props.createLabel}
+          key={`${label.length}-${label}`}
         />
       )
     }
 
     return (
-      <Text>${label}</Text>
+      <TouchableOpacity
+        onPress={this.props.selectLabel}
+      >
+        <View
+          style={styles.labelContainer}
+          key={`${label.length}-${label}`}
+        >
+          <Text>{label}</Text>
+        </View>
+      </TouchableOpacity>
     )
   }
 
@@ -118,6 +136,7 @@ class Main extends React.Component {
       isTimerRunning,
       timerStartedAt,
       timerEndedAt,
+      createdLabel,
     } = this.state
 
     const runningTimeSpan = {
@@ -125,61 +144,47 @@ class Main extends React.Component {
       endedAt: timerEndedAt && timerEndedAt.getTime(),
     }
 
+    const selectedLabel = undefined
+
     const labels = [
       'NEW',
+      createdLabel,
       'statistics',
       'probability theory',
       'linear algebra',
+      'running',
+      'foo',
+      'bar',
+      'baz',
     ]
 
     return (
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={this.toggleTimer}
+          onPress={selectedLabel ? this.toggleTimer : () => {}}
         >
           <View style={styles.timerButtonContainer}>
             <Text style={styles.timerButtonText}>{isTimerRunning ? 'STOP' : 'RUN'}</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.scrollViewContainer}>
+          {!selectedLabel && (
+            <View style={styles.labelsTitleContainer}>
+              <Text style={styles.labelsTitle}>labels</Text>
+            </View>
+          )}
           <ScrollView
             contentContainerStyle={styles.scrollView}
           >
-            <TimeSpan
-              timeSpan={runningTimeSpan}
-              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
-              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
-            />
-            <TimeSpan
-              timeSpan={runningTimeSpan}
-              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
-              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
-            />
-            <TimeSpan
-              timeSpan={runningTimeSpan}
-              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
-              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
-            />
-            <TimeSpan
-              timeSpan={runningTimeSpan}
-              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
-              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
-            />
-            <TimeSpan
-              timeSpan={runningTimeSpan}
-              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
-              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
-            />
-            <TimeSpan
-              timeSpan={runningTimeSpan}
-              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
-              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
-            />
-            <TimeSpan
-              timeSpan={runningTimeSpan}
-              onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
-              onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
-            />
+            {!selectedLabel && labels.map(this.renderLabel)}
+            {selectedLabel && runningTimeSpan.startedAt && runningTimeSpan.endedAt && (
+              <TimeSpan
+                timeSpan={runningTimeSpan}
+                onPressStartedAt={this.setTimeSpanFromTimePicker('timerStartedAt')}
+                onPressEndedAt={this.setTimeSpanFromTimePicker('timerEndedAt')}
+              />
+            )}
+            {selectedLabel && 'остальные промежутки времени'}
           </ScrollView>
         </View>
       </View>
@@ -191,6 +196,8 @@ const { func } = PropTypes
 
 Main.propTypes = {
   saveTimeSpan: func.isRequired,
+  selectLabel: func.isRequired,
+  createLabel: func.isRequired,
 }
 
 export default connect(null, mapDispatchToProps)(Main)
